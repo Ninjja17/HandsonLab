@@ -2,6 +2,7 @@
 
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import { incidentApi, incidentApiEnabled } from "./lib/incident-api";
+import { ElephantAssistant } from "./components/elephant-assistant";
 
 type Severity = "P1" | "P2" | "P3";
 type Status = "OPEN" | "INVESTIGATING" | "MITIGATED" | "CLOSED";
@@ -244,6 +245,7 @@ export default function Home() {
 
         <aside className="right-rail"><div className="rail-panel ai-panel"><span className="eyebrow">ASSISTED RESPONSE</span><h3>Copilot brief</h3><p>Evidence-linked guidance for the incident commander.</p><div className="ai-suggestion"><span>✦</span><div><strong>Next best action</strong><p>Verify connection-pool saturation before changing retry policy.</p></div></div><button className="text-button" onClick={generateRca}>Generate RCA draft <span>↗</span></button></div><div className="rail-panel"><div className="panel-heading"><div><span className="eyebrow">ROOT CAUSE</span><h3>RCA workspace</h3></div><span className="status-chip draft">DRAFT</span></div>{rca ? <div className="rca-form"><label>Root cause<textarea value={rca.rootCause} onChange={(event) => setRca({ ...rca, rootCause: event.target.value })} /></label><label>Resolution<textarea value={rca.resolution} onChange={(event) => setRca({ ...rca, resolution: event.target.value })} /></label><label>Recommendations<textarea value={rca.recommendations} onChange={(event) => setRca({ ...rca, recommendations: event.target.value })} /></label></div> : <div className="empty-state"><span>◎</span><p>Select “Generate RCA draft” to create an editable response document from this incident.</p></div>}</div></aside>
       </section>
+      <ElephantAssistant incident={selected} slaLabel={getSla(selected, now).label} relatedCount={relatedIncidents.length} timelineCount={activity.filter((item) => item.incidentId === selected.incidentId).length} />
       {notice && <button className="toast" onClick={() => setNotice("")}>{notice} <span>×</span></button>}
       {showCreate && <div className="modal-backdrop" onClick={() => setShowCreate(false)}><form className="create-modal" onSubmit={createIncident} onClick={(event) => event.stopPropagation()}><div className="panel-heading"><div><span className="eyebrow">NEW SIGNAL</span><h2>Create incident</h2></div><button type="button" className="icon-button" onClick={() => setShowCreate(false)}>×</button></div><label>Title<input name="title" required placeholder="What is happening?" /></label><label>Impacted service<input name="service" required placeholder="e.g. Checkout API" /></label><label>Description<textarea name="description" required placeholder="Describe the customer or system impact" /></label><div className="form-row"><label>Severity<select name="severity" defaultValue="P2"><option>P1</option><option>P2</option><option>P3</option></select></label><label>Owner<select name="owner" defaultValue="Unassigned"><option>Unassigned</option><option>Maya Chen</option><option>Devon Price</option><option>Alex Rivera</option></select></label></div><button className="primary-button" type="submit">Create incident</button></form></div>}
     </main>
