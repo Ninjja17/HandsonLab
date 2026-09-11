@@ -141,6 +141,27 @@ Validate the production build:
 npm run build
 ```
 
+## Deploy On Cloudflare Pages
+
+Use **Cloudflare Pages**, not `wrangler deploy`, for the current frontend demo.
+
+Recommended Cloudflare settings:
+
+```text
+Framework preset: Next.js
+Build command: npm run pages:build
+Build output directory: out
+Deploy command: leave empty
+```
+
+Do not use this deploy command for the current project:
+
+```text
+npx wrangler deploy
+```
+
+That command deploys a Cloudflare Worker through OpenNext and can create Worker service-binding errors. The current app is a static frontend demo, so Cloudflare Pages should publish the exported `out/` folder.
+
 ## Project Map
 
 ```text
