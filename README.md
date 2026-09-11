@@ -2,196 +2,171 @@
 
 <div align="center">
 
-### Incident response, with a room to think in
+### An incident command center for response, RCA, and operational clarity
 
-An operational command center for turning production signals into coordinated action, visible decisions, and useful root-cause reports.
+Signal Room helps engineering teams turn production incidents into coordinated ownership, visible decisions, SLA-aware action, and structured root-cause learning.
 
-[![Next.js](https://img.shields.io/badge/Next.js-15-black?logo=next.js)](https://nextjs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?logo=typescript)](https://www.typescriptlang.org/)
-[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.4-6db33f?logo=springboot)](https://spring.io/projects/spring-boot)
+[![Next.js](https://img.shields.io/badge/Next.js-15-111111?logo=next.js)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-3178c6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Spring Boot Ready](https://img.shields.io/badge/Spring%20Boot-ready-6db33f?logo=springboot&logoColor=white)](https://spring.io/projects/spring-boot)
 [![Build](https://img.shields.io/badge/build-passing-64dfad)](https://github.com/Ninjja17/HandsonLab)
-
-**[Open the repository](https://github.com/Ninjja17/HandsonLab)** · **[Try the local demo](http://localhost:3000)** · **[Read the migration plan](docs/scalable-migration-plan.md)**
 
 </div>
 
-> Signal Room is built for the moment after the alert fires: when a team needs to see the impact, make the next decision, and leave behind an honest record of what happened.
+![Signal Room command center](docs/assets/signal-room-preview.svg)
 
-## The Product
+## What The Platform Does
 
-Signal Room replaces the familiar dashboard maze with an asymmetric incident command center inspired by Linear, Raycast, Stripe, Datadog, and Vercel.
+Signal Room is designed for the first hour of a production incident, when teams need to quickly answer:
 
-The interface keeps the operational story in one view:
+- What is broken?
+- Who owns the response?
+- How severe is the impact?
+- Are we close to breaching SLA?
+- What has already happened?
+- What should go into the RCA?
+- Are there similar incidents nearby?
 
-```text
-Signal -> Ownership -> Investigation -> Mitigation -> RCA -> Learning
-```
+Instead of a generic admin dashboard, Signal Room gives responders a focused command-center workspace with incident context, ownership, timeline evidence, SLA posture, RCA drafting, related incident signals, and a lightweight elephant assistant.
 
-It is currently a polished frontend demo with browser persistence. A Spring Boot API foundation is included for the next migration phase.
+## Current Experience
 
-## What Works Today
-
-| Area | Included |
+| Capability | What it does |
 | --- | --- |
-| Incident control | Create, search, filter, select, assign, and update incidents |
-| Lifecycle | `OPEN -> INVESTIGATING -> MITIGATED -> CLOSED` with invalid-transition protection |
-| Reopen policy | Reopen a resolved incident within 24 hours |
-| SLA operations | P1/P2/P3 targets, live status, breach filters, and escalation events |
-| War room | Responder notes, decision activity, and synchronized response timeline |
-| RCA | Local rule-based draft generation with editable fields |
-| Correlation | Related-incident detection by service and shared keywords |
-| Assistant | UI-only elephant companion with mock, evidence-linked answers |
-| Persistence | Browser `localStorage` in demo mode |
-| Interaction | Responsive layout, reduced motion, shine, tilt, and keyboard-accessible controls |
+| Incident intake | Create a new incident with title, description, severity, owner, and impacted service |
+| Incident queue | Search, filter, and select incidents from a live-style operational queue |
+| Lifecycle control | Move incidents through `OPEN -> INVESTIGATING -> MITIGATED -> CLOSED` |
+| Guardrails | Reject invalid or expired lifecycle actions with clear feedback |
+| SLA monitoring | Track P1, P2, and P3 resolution windows with breach and escalation indicators |
+| Reopen window | Reopen a resolved incident within 24 hours when investigation must resume |
+| War room activity | Add responder notes and keep a visible decision history |
+| Response timeline | Show incident activity as an ordered operational record |
+| RCA draft | Generate editable RCA content from incident details |
+| Related incidents | Suggest similar incidents by shared service or incident language |
+| Elephant assistant | UI-only contextual assistant that answers from visible incident evidence |
+| Browser persistence | Save demo state locally so refreshes do not erase the workflow |
 
-### SLA Model
+## SLA Rules
 
-| Severity | Resolution target | Demo behavior |
+| Severity | Target resolution time | Platform behavior |
 | --- | ---: | --- |
-| P1 | 2 hours | Critical impact and immediate escalation visibility |
-| P2 | 4 hours | High-priority response tracking |
-| P3 | 8 hours | Medium-priority operational follow-up |
+| P1 | 2 hours | Critical incident, high visibility, escalation ready |
+| P2 | 4 hours | High-priority incident with active SLA tracking |
+| P3 | 8 hours | Medium-priority incident with operational follow-up |
 
-## The Demo Story
+SLA status appears directly in the incident queue and investigation workspace. Responders can filter by within-SLA, approaching-SLA, and breached-SLA states.
 
-Run the demo as one connected incident narrative:
-
-1. Open the command center and review active incidents, SLA posture, and response velocity.
-2. Select `INC-1042` to reveal related checkout incidents `INC-1043` and `INC-1044`.
-3. Create a new incident and assign an incident commander.
-4. Move it through the controlled lifecycle.
-5. Add a responder note and show it in the activity stream and decision timeline.
-6. Open the elephant assistant and ask why the SLA is at risk.
-7. Generate and edit the RCA draft.
-8. Raise an SLA escalation and show the recorded timeline event.
-9. Select `INC-1035` and demonstrate the 24-hour reopen window.
-
-## UI Direction
-
-- No generic admin dashboard or left-sidebar template
-- Asymmetric command-center composition
-- Dense bento information architecture
-- Floating contextual panels
-- Glass surfaces and restrained gradients
-- Keyboard-first interactions
-- Contextual elephant assistant instead of a conventional chat drawer
-- Motion used to communicate state, focus, and attention
-
-## Architecture
+## How The Current Tech Stack Works
 
 ```mermaid
 flowchart LR
-    U[Responder] --> W[Next.js Command Center]
-    W --> L[localStorage demo mode]
-    W -. optional NEXT_PUBLIC_API_URL .-> A[Spring Boot API]
-    A --> P[(PostgreSQL)]
-    A --> F[Flyway]
-    A -. future .-> R[(Redis)]
-    A -. future .-> K[Kafka + Outbox]
+    A[Responder in Browser] --> B[Next.js Command Center]
+    B --> C[React State]
+    C --> D[localStorage]
+    B --> E[Typed API Adapter]
+    E -. enabled later .-> F[Spring Boot API]
+    F -. planned source of truth .-> G[(PostgreSQL)]
 ```
 
-### Current Mode
+### Demo Mode
 
-The browser runs independently with seeded incidents and `localStorage`. This is the recommended mode for the client showcase because it needs no database, Docker, Redis, Kafka, or LLM credentials.
+The current running application is frontend-first:
 
-### Scalable Foundation
+- Next.js renders the command center.
+- React state powers the incident workflow.
+- `localStorage` persists incidents and activity in the browser.
+- Mock assistant answers are generated locally from the selected incident.
+- No API key, database, Redis, Kafka, or Docker is required for the showcase.
 
-The repository also contains:
+This keeps the client demo fast, reliable, and easy to run anywhere.
 
-- Spring Boot 3.4 API foundation
-- PostgreSQL 16 schema and Flyway migration
-- REST endpoints under `/api/v1/incidents`
-- Domain-owned lifecycle and reopen rules
-- Redis and Kafka integration configuration
-- Transactional outbox schema foundation
-- OpenTelemetry-ready Actuator configuration
+### Backend-Ready Mode
+
+The repository also includes a scalable backend foundation:
+
+- Spring Boot API project in `backend/`
+- PostgreSQL schema managed by Flyway
+- Domain model for lifecycle and 24-hour reopen rules
+- Versioned API adapter in the frontend
+- Redis and Kafka configuration prepared for future scale
+
+The UI can later switch from local browser storage to the Spring Boot API by configuring `NEXT_PUBLIC_API_URL`.
+
+## Design Language
+
+Signal Room uses a modern operational interface inspired by Linear, Raycast, Stripe, Vercel, and Datadog:
+
+- Asymmetric command-center layout
+- Dense bento-style information architecture
+- Floating contextual panels
+- Glassmorphism and subtle gradients
+- Hover shine and tilt interactions
+- Keyboard-accessible controls
+- Reduced-motion support
+- Distinctive elephant assistant instead of a standard chat box
+
+## Show It To A Client
+
+Use this short story:
+
+1. Open the command center.
+2. Select `INC-1042` and explain customer impact, owner, SLA state, and timeline.
+3. Show related incidents `INC-1043` and `INC-1044`.
+4. Create a new incident and assign an owner.
+5. Move it from open to investigating.
+6. Add a responder note and show it in the timeline.
+7. Raise an SLA escalation.
+8. Generate an RCA draft and edit the recommendation.
+9. Open the elephant assistant and ask, "Why is the SLA at risk?"
+10. Select `INC-1035` and demonstrate the 24-hour reopen flow.
 
 ## Run Locally
 
-Requirements: Node.js 20+.
+Requirements: Node.js 20 or later.
 
 ```bash
 npm install
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000).
+Open:
 
-Validate the production bundle:
+```text
+http://localhost:3000
+```
+
+Validate the production build:
 
 ```bash
 npm run build
 ```
 
-## Backend Foundation
-
-The API boundary is ready for the next phase:
-
-```text
-GET   /api/v1/incidents
-GET   /api/v1/incidents/{incidentId}
-POST  /api/v1/incidents
-PATCH /api/v1/incidents/{incidentId}
-POST  /api/v1/incidents/{incidentId}/transitions
-```
-
-When Docker and Maven are available:
-
-```bash
-docker compose up -d
-cd backend
-mvn spring-boot:run
-```
-
-To point the frontend at the API:
-
-```text
-NEXT_PUBLIC_API_URL=http://localhost:8080
-```
-
-Without that variable, the frontend remains in demo mode. PostgreSQL becomes the source of truth only after API integration is enabled; JSON is used for transport, not as the database.
-
-## Deployment Direction
-
-```text
-GitHub repository
-    |
-    +--> Cloudflare Pages  (Next.js frontend)
-    |
-    +--> Railway           (Spring Boot API)
-                              |
-                              +--> Railway PostgreSQL
-```
-
-Redis and Kafka are intentionally deferred until production traffic and integration requirements justify their operational cost.
-
-## Repository Map
+## Project Map
 
 ```text
 app/
-  components/elephant-assistant.tsx  UI-only contextual assistant
-  lib/incident-api.ts                typed backend adapter
-  page.tsx                           command center and workflows
-  globals.css                        visual system and motion
+  components/elephant-assistant.tsx  contextual assistant UI
+  lib/incident-api.ts                typed backend API adapter
+  page.tsx                           command center workflow
+  globals.css                        visual system and interactions
 backend/
-  src/main/java/                     Spring Boot domain and API layers
-  src/main/resources/                runtime configuration and Flyway SQL
+  src/main/java/                     Spring Boot API foundation
+  src/main/resources/                application config and Flyway SQL
 docs/
-  scalable-migration-plan.md         phase gates and deployment plan
-docker-compose.yml                    local PostgreSQL/Redis/Kafka services
+  assets/signal-room-preview.svg     README visual preview
+  scalable-migration-plan.md         future architecture plan
+docker-compose.yml                   optional local infra for backend phase
 ```
 
-## Roadmap
+## What Is Ready vs Future
 
-- [x] Client-ready incident command center
-- [x] SLA monitoring, escalation, RCA, related incidents, and reopen policy
-- [x] UI-only elephant assistant prototype
-- [x] Spring Boot API foundation
-- [ ] Connect frontend mutations to the API
-- [ ] Add authentication and workspace authorization
-- [ ] Persist timeline and outbox events
-- [ ] Add real LLM provider behind a read-only, cited assistant contract
-- [ ] Add production observability and deployment automation
+| Ready now | Future phase |
+| --- | --- |
+| Polished frontend command center | Full Spring Boot runtime deployment |
+| Browser-persisted demo data | PostgreSQL as source of truth |
+| UI-only elephant assistant | Real LLM integration with citations |
+| SLA, RCA, timeline, and related incidents | Authentication, RBAC, Redis, Kafka, observability |
+| Local/client showcase | Cloudflare frontend + Railway backend |
 
 ## License
 

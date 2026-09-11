@@ -1,0 +1,72 @@
+<svg width="1200" height="675" viewBox="0 0 1200 675" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="675" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#070B12"/>
+      <stop offset="0.55" stop-color="#111827"/>
+      <stop offset="1" stop-color="#141027"/>
+    </linearGradient>
+    <linearGradient id="panel" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#1B2434" stop-opacity="0.92"/>
+      <stop offset="1" stop-color="#101827" stop-opacity="0.78"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#83B8FF"/>
+      <stop offset="1" stop-color="#B8A4FF"/>
+    </linearGradient>
+    <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="18" result="blur"/>
+      <feColorMatrix in="blur" type="matrix" values="0 0 0 0 0.52 0 0 0 0 0.72 0 0 0 0 1 0 0 0 0.45 0"/>
+      <feBlend in="SourceGraphic"/>
+    </filter>
+  </defs>
+  <rect width="1200" height="675" rx="28" fill="url(#bg)"/>
+  <circle cx="1010" cy="40" r="260" fill="#5C48AE" fill-opacity="0.23"/>
+  <circle cx="80" cy="520" r="230" fill="#2566A4" fill-opacity="0.18"/>
+  <g opacity="0.65">
+    <path d="M60 84H1140" stroke="#9FAEC6" stroke-opacity="0.14"/>
+    <path d="M60 590H1140" stroke="#9FAEC6" stroke-opacity="0.14"/>
+  </g>
+  <text x="72" y="58" fill="#E8EDF5" font-family="Space Grotesk, Segoe UI, Arial" font-size="26" font-weight="700">◎ Signal Room</text>
+  <text x="935" y="58" fill="#64DFAD" font-family="DM Mono, Consolas, monospace" font-size="13">LIVE COMMAND CENTER</text>
+  <text x="72" y="145" fill="#7F8A9D" font-family="DM Mono, Consolas, monospace" font-size="13">INCIDENT RESPONSE PLATFORM</text>
+  <text x="72" y="205" fill="#E8EDF5" font-family="Space Grotesk, Segoe UI, Arial" font-size="58" font-weight="700" letter-spacing="-3">Respond before the story is lost.</text>
+  <text x="74" y="242" fill="#AAB4C5" font-family="Space Grotesk, Segoe UI, Arial" font-size="18">Track ownership, SLA pressure, timeline evidence, RCA drafts, and related signals in one operational room.</text>
+  <g transform="translate(72 300)">
+    <rect width="216" height="136" rx="12" fill="url(#panel)" stroke="#9FAEC6" stroke-opacity="0.18"/>
+    <text x="20" y="35" fill="#7F8A9D" font-family="DM Mono, Consolas, monospace" font-size="12">ACTIVE INCIDENTS</text>
+    <text x="20" y="92" fill="#E8EDF5" font-family="Space Grotesk, Segoe UI, Arial" font-size="54" font-weight="700">6</text>
+    <text x="102" y="88" fill="#B8A4FF" font-family="DM Mono, Consolas, monospace" font-size="12">+ command queue</text>
+  </g>
+  <g transform="translate(310 300)">
+    <rect width="216" height="136" rx="12" fill="url(#panel)" stroke="#9FAEC6" stroke-opacity="0.18"/>
+    <text x="20" y="35" fill="#7F8A9D" font-family="DM Mono, Consolas, monospace" font-size="12">SLA BREACHES</text>
+    <text x="20" y="92" fill="#FF7180" font-family="Space Grotesk, Segoe UI, Arial" font-size="54" font-weight="700">5</text>
+    <text x="100" y="88" fill="#FFBF69" font-family="DM Mono, Consolas, monospace" font-size="12">escalation ready</text>
+  </g>
+  <g transform="translate(548 300)">
+    <rect width="285" height="136" rx="12" fill="url(#panel)" stroke="#9FAEC6" stroke-opacity="0.18"/>
+    <text x="20" y="35" fill="#7F8A9D" font-family="DM Mono, Consolas, monospace" font-size="12">RESPONSE TIMELINE</text>
+    <circle cx="29" cy="65" r="5" fill="#B8A4FF"/><rect x="46" y="59" width="188" height="10" rx="5" fill="#E8EDF5" fill-opacity="0.7"/>
+    <circle cx="29" cy="91" r="5" fill="#FFBF69"/><rect x="46" y="85" width="220" height="10" rx="5" fill="#E8EDF5" fill-opacity="0.45"/>
+    <circle cx="29" cy="117" r="5" fill="#64DFAD"/><rect x="46" y="111" width="146" height="10" rx="5" fill="#E8EDF5" fill-opacity="0.35"/>
+  </g>
+  <g transform="translate(856 300)">
+    <rect width="270" height="136" rx="12" fill="url(#panel)" stroke="#9FAEC6" stroke-opacity="0.18"/>
+    <text x="20" y="35" fill="#7F8A9D" font-family="DM Mono, Consolas, monospace" font-size="12">ELEPHANT ASSISTANT</text>
+    <text x="20" y="70" fill="#E8EDF5" font-family="Space Grotesk, Segoe UI, Arial" font-size="20" font-weight="700">Ask about INC-1042</text>
+    <text x="20" y="99" fill="#AAB4C5" font-family="Space Grotesk, Segoe UI, Arial" font-size="14">Grounded answers from visible incident evidence.</text>
+    <g transform="translate(212 72)" filter="url(#glow)">
+      <ellipse cx="26" cy="24" rx="30" ry="24" fill="url(#accent)"/>
+      <ellipse cx="3" cy="19" rx="12" ry="16" fill="#7668B7"/>
+      <ellipse cx="49" cy="18" rx="12" ry="16" fill="#7668B7"/>
+      <circle cx="34" cy="20" r="3" fill="#111525"/>
+      <path d="M44 34C56 50 33 55 31 43" stroke="#9687D1" stroke-width="8" stroke-linecap="round"/>
+      <path d="M18 36C22 49 33 50 38 40" stroke="#FFF4DB" stroke-width="3" stroke-linecap="round"/>
+    </g>
+  </g>
+  <g transform="translate(72 485)">
+    <rect width="1054" height="70" rx="14" fill="#0F1623" fill-opacity="0.86" stroke="#9FAEC6" stroke-opacity="0.16"/>
+    <text x="22" y="30" fill="#83B8FF" font-family="DM Mono, Consolas, monospace" font-size="12">DEMO FLOW</text>
+    <text x="22" y="53" fill="#E8EDF5" font-family="Space Grotesk, Segoe UI, Arial" font-size="18">Create incident → assign owner → track SLA → log response → generate RCA → reopen within 24h</text>
+  </g>
+</svg>
