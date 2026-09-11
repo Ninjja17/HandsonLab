@@ -92,6 +92,8 @@ The repository also includes a scalable backend foundation:
 
 The UI can later switch from local browser storage to the Spring Boot API by configuring `NEXT_PUBLIC_API_URL`.
 
+When the Railway API is configured, the elephant assistant calls `POST /api/v1/assistant/messages`. The LLM key stays on Railway; the browser receives only the grounded answer and citations. Without the API, the assistant uses local demo responses so the Cloudflare showcase remains usable.
+
 ## Design Language
 
 Signal Room uses a modern operational interface inspired by Linear, Raycast, Stripe, Vercel, and Datadog:

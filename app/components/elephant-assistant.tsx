@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useEffect, useState } from "react";
+import { assistantApi, incidentApiEnabled } from "../lib/incident-api";
 
 type AssistantIncident = {
   incidentId: string;
@@ -20,6 +21,7 @@ type Props = {
   relatedCount: number;
   timelineCount: number;
 };
+type Citation = { source: string; type: string; label: string };
 
 const anchors: Array<{ id: Anchor; label: string }> = [
   { id: "incident", label: "Incident" },
@@ -52,9 +54,11 @@ export function ElephantAssistant({ incident, slaLabel, relatedCount, timelineCo
   const [thinking, setThinking] = useState(false);
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState("");
+  const [citations, setCitations] = useState<Citation[]>([]);
 
   useEffect(() => {
     setAnswer("");
+    setCitations([]);
     setOpen(false);
     setAnchor("incident");
   }, [incident.incidentId]);
@@ -67,14 +71,30 @@ export function ElephantAssistant({ incident, slaLabel, relatedCount, timelineCo
     return () => window.clearInterval(timer);
   }, [open]);
 
-  function ask(event: FormEvent<HTMLFormElement>) {
+  async function ask(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!question.trim()) return;
     setThinking(true);
-    window.setTimeout(() => {
-      setAnswer(mockAnswer(question, incident, slaLabel, relatedCount, timelineCount));
+    try {
+      if (incidentApiEnabled) {
+        const response = await assistantApi.message({ incidentId: incident.incidentId, question });
+        setAnswer(response.answer);
+        setCitations(response.citations);
+      } else {
+        await new Promise((resolve) => window.setTimeout(resolve, 420));
+        setAnswer(mockAnswer(question, incident, slaLabel, relatedCount, timelineCount));
+        setCitations([
+          { source: incident.incidentId, type: "incident", label: incident.title },
+          { source: incident.incidentId, type: "service", label: incident.impactedService },
+          { source: incident.incidentId, type: "lifecycle", label: incident.status },
+        ]);
+      }
+    } catch {
+      setAnswer("The live assistant is unavailable, so this local workspace cannot retrieve a model answer right now.");
+      setCitations([]);
+    } finally {
       setThinking(false);
-    }, 420);
+    }
   }
 
   return (
@@ -85,7 +105,7 @@ export function ElephantAssistant({ incident, slaLabel, relatedCount, timelineCo
       {open && <div className="elephant-panel" role="dialog" aria-label="Incident assistant">
         <div className="elephant-panel-heading"><div><span className="eyebrow">FIELD COMPANION</span><strong>Ask about {incident.incidentId}</strong></div><button className="icon-button" onClick={() => setOpen(false)} aria-label="Close incident assistant">×</button></div>
         <p className="elephant-context">Read-only answers grounded in the current incident workspace.</p>
-        {answer && <div className="elephant-answer"><p>{answer}</p><div className="elephant-citations"><span>Evidence</span><button onClick={() => setAnchor("incident")}>{incident.incidentId}</button><button onClick={() => setAnchor("timeline")}>timeline</button><button onClick={() => setAnchor("sla")}>SLA</button></div></div>}
+        {answer && <div className="elephant-answer"><p>{answer}</p>{citations.length > 0 && <div className="elephant-citations"><span>Evidence</span>{citations.map((citation) => <button key={`${citation.source}-${citation.type}`} onClick={() => setAnchor(citation.type === "service" ? "related" : citation.type === "lifecycle" ? "sla" : "incident")}>{citation.label}</button>)}</div>}</div>}
         <form className="elephant-form" onSubmit={ask}><input autoFocus aria-label="Ask incident assistant" value={question} onChange={(event) => setQuestion(event.target.value)} placeholder="Ask about impact, SLA, RCA..." /><button className="text-button" type="submit">{thinking ? "Thinking" : "Ask"}</button></form>
         <div className="elephant-prompts"><button onClick={() => setQuestion("What is happening with this incident?")}>What is happening?</button><button onClick={() => setQuestion("Why is the SLA at risk?")}>Why is SLA at risk?</button><button onClick={() => setQuestion("Summarize the RCA recommendations.")}>Summarize RCA</button></div>
       </div>}

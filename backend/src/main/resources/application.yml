@@ -31,3 +31,7 @@ management:
         enabled: true
 server:
   port: ${PORT:8080}
+llm:
+  base-url: ${LLM_BASE_URL:https://api.openai.com/v1}
+  api-key: ${LLM_API_KEY:}
+  model: ${LLM_MODEL:}

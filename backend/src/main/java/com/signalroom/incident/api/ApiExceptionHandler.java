@@ -1,6 +1,7 @@
 package com.signalroom.incident.api;
 
 import com.signalroom.incident.application.IncidentService;
+import com.signalroom.assistant.infrastructure.OpenAiCompatibleLlmClient;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -21,6 +22,12 @@ public class ApiExceptionHandler {
     @ResponseStatus(HttpStatus.CONFLICT)
     public Map<String, Object> conflict(IllegalStateException exception) {
         return problem("invalid-incident-operation", exception.getMessage(), HttpStatus.CONFLICT.value());
+    }
+
+    @ExceptionHandler(OpenAiCompatibleLlmClient.AssistantNotConfiguredException.class)
+    @ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)
+    public Map<String, Object> assistantUnavailable(OpenAiCompatibleLlmClient.AssistantNotConfiguredException exception) {
+        return problem("assistant-not-configured", exception.getMessage(), HttpStatus.SERVICE_UNAVAILABLE.value());
     }
 
     private Map<String, Object> problem(String type, String detail, int status) {

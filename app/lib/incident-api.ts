@@ -28,6 +28,12 @@ export type UpdateIncidentInput = {
   impactedService: string;
 };
 
+export type AssistantResponse = {
+  answer: string;
+  citations: Array<{ source: string; type: string; label: string }>;
+  grounded: boolean;
+};
+
 const apiUrl = process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "");
 
 export const incidentApiEnabled = Boolean(apiUrl);
@@ -54,4 +60,8 @@ export const incidentApi = {
   create: (input: CreateIncidentInput) => request<ApiIncident>("/api/v1/incidents", { method: "POST", body: JSON.stringify(input) }),
   update: (incidentId: string, input: UpdateIncidentInput) => request<ApiIncident>(`/api/v1/incidents/${incidentId}`, { method: "PATCH", body: JSON.stringify(input) }),
   transition: (incidentId: string, status: Status) => request<ApiIncident>(`/api/v1/incidents/${incidentId}/transitions`, { method: "POST", body: JSON.stringify({ status }) }),
+};
+
+export const assistantApi = {
+  message: (input: { incidentId: string; question: string; conversationId?: string }) => request<AssistantResponse>("/api/v1/assistant/messages", { method: "POST", body: JSON.stringify(input) }),
 };
